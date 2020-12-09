@@ -90,8 +90,7 @@ public class LiveResponse {
 
 	@Override
 	public String toString() {
-		return "You currency: " + source + "\n"
-				+ "currency changed: " + quotes;
+		return "currency changed: " + quotes;
 				
 	}
 
