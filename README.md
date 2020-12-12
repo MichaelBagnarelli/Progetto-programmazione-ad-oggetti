@@ -16,9 +16,9 @@ Il progetto ha lo scopo di restiturie e analizzare i dati in formato Json relati
 </p>
 <h3>Sequence Diagram - Scelta Sportello
 </h3>
-<p align="center"><img src="https://github.com/MichaelBagnarelli/Progetto-programmazione-ad-oggetti/blob/main/Uml-Turista/Sequence%20Diagram%20Scelta%20Sportello.vpp" alt style="max-width:100%;">
+<p align="center"><img src="https://github.com/MichaelBagnarelli/Progetto-programmazione-ad-oggetti/blob/main/Uml-Turista/Sequence%20Diagram-%20Scelta%20Sportello.png" alt style="max-width:100%;">
 </p>
 <h3>Sequence Diagram - Statistiche
 </h3>
-<p align="center"><img src="https://github.com/MichaelBagnarelli/Progetto-programmazione-ad-oggetti/blob/main/Uml-Turista/Case%20Diagram-%20Turista.png" alt style="max-width:100%;">
+<p align="center"><img src="https://github.com/MichaelBagnarelli/Progetto-programmazione-ad-oggetti/blob/main/Uml-Turista/Sequence%20Diagram-%20Statistiche.png" alt style="max-width:100%;">
 </p>
