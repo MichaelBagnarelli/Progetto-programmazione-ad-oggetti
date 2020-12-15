@@ -12,8 +12,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import it.univpm.turista.model.HistoricalResponse;
-import it.univpm.turista.model.LiveResponse;
+import it.univpm.turista.model.Historical;
+import it.univpm.turista.model.Live;
 
 /**
  * ApiRequest è la classe che genera la richiesta all'API currencylayer
@@ -22,7 +22,7 @@ import it.univpm.turista.model.LiveResponse;
 public class ApiRequest {
 
 	private static final String http = "http://api.currencylayer.com/";
-	private static final String access_Key = "?access_key=1b2b4690da1e104760f6e64731ea17a5";
+	private static final String access_Key = "?access_key=7675e4521f1a2bb713b0638fa9fa36bd";
 	private static String endpoint;
 	private static String url;
 	private static String data;
@@ -73,7 +73,7 @@ public class ApiRequest {
 	 * @return live contiene i dati ricevuti dall'API
 	 */
 
-	public static LiveResponse RichiestaLive() throws JSONException, IOException {
+	public static Live RichiestaLive() throws JSONException, IOException {
 
 		endpoint = "live";
 		url = http + endpoint + access_Key;
@@ -81,7 +81,7 @@ public class ApiRequest {
 		ObjectMapper obj = new ObjectMapper();
 		JSONObject json = readJsonFromUrl(url);
 
-		LiveResponse live = obj.readValue(json.toString(), LiveResponse.class);
+		Live live = obj.readValue(json.toString(), Live.class);
 		return live;
 	}
 
@@ -93,7 +93,7 @@ public class ApiRequest {
 	 * @return historical contiene i dati ricevuti dall'API
 	 */
 
-	public static HistoricalResponse RichiestaStorica(String date) throws JSONException, IOException {
+	public static Historical RichiestaStorica(String date) throws JSONException, IOException {
 
 		data = "&date=" + date;
 		endpoint = "historical";
@@ -101,7 +101,7 @@ public class ApiRequest {
 
 		ObjectMapper obj = new ObjectMapper();
 		JSONObject json = readJsonFromUrl(url);
-		HistoricalResponse historical = obj.readValue(json.toString(), HistoricalResponse.class);
+		Historical historical = obj.readValue(json.toString(), Historical.class);
 
 		return historical;
 	}

@@ -1,20 +1,24 @@
 package it.univpm.turista.controller;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.util.Set;
 
 import org.json.JSONException;
-
+import org.json.JSONObject;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import it.univpm.turista.model.HistoricalResponse;
-import it.univpm.turista.model.LiveResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 
-import it.univpm.turista.model.Statistics;
-
-import it.univpm.turista.model.changeCurrency;
+import it.univpm.turista.model.Request;
+import it.univpm.turista.model.Historical;
+import it.univpm.turista.model.Live;
+import it.univpm.turista.utilities.*;
 
 /**
  * controller che gstisce le richieste
@@ -23,6 +27,10 @@ import it.univpm.turista.model.changeCurrency;
 @RestController
 public class controller {
 
+	final String http = "http://api.currencylayer.com/";
+	final String access_Key = "?access_key=1b2b4690da1e104760f6e64731ea17a5";
+	final String url = http + "live" + access_Key;
+	
 	/**
 	 * Metodo che restuituisce i dati presenti nel json
 	 * 
@@ -30,90 +38,111 @@ public class controller {
 	 * @throws IOException
 	 * @return dati Json
 	 */
-
 	@RequestMapping(method = { RequestMethod.GET }, value = "/data", produces = "application/json")
-	public String getvalue() throws JSONException, IOException {
-		LiveResponse currency = ApiRequest.RichiestaLive();
-		return currency.getQuotes().toString();
+	public Live getData() throws JSONException, IOException {
+		
+		JSONObject json = ApiRequest.readJsonFromUrl(url);
+		JsonMapper mapper = new JsonMapper();
+		return mapper.readValue(json.toString(), Live.class);
+	}
 
+	/**
+	 * Metodo che restituisce i metadati e relativo tipo in formato json
+	 *
+	 * @throws JSONException
+	 * @throws IOException
+	 * @return metadati in formato json
+	 */
+	@RequestMapping(value = "/metadata", method = { RequestMethod.GET }, produces = "application/json")
+	public String GetMeta() throws JSONException, IOException {
+
+		JSONObject json = ApiRequest.readJsonFromUrl(url);
+		Set<String> str = json.keySet();
+		String ss = "[ ";
+		for (String s : str) {
+			ss += "{ " + " \"alias\" : " + s + "\n" + "		\"tipo\" : " + util.tipo(s) + "} " + "\n";
+		}
+		ss += "]";
+		return ss;
 	}
 
 	/**
 	 * Metodo che gestisce la richiesta del tasso di cambio
 	 *
-	 * @param code  codice della propria valuta
-	 * @param code2 codice della valutu su cui effetuare il cambio
+	 * @param body  contenente i codici delle valute 
+	 * 		per le quali è richiesto il tasso
 	 * @throws JSONException
 	 * @throws IOException
 	 * @return stringa dove viene riportato il tasso di cambio
 	 */
 
-	@RequestMapping(method = { RequestMethod.GET }, value = "/tasso", produces = "aplication/json")
-	public String getvaori(@RequestParam String code, String code2) throws JSONException, IOException {
-		LiveResponse live = ApiRequest.RichiestaLive();
-		double ris = changeCurrency.currencyRate(live, code, code2);
-		return code + " to " + code2 + ": " + ris;
+	@RequestMapping(method = { RequestMethod.POST }, value = "/tasso", produces = "aplication/json")
+	public String getTasso(@RequestBody String body) throws JSONException, IOException {
+		Live live = ApiRequest.RichiestaLive();
+		ObjectMapper obj = new ObjectMapper();
+		Request request = obj.readValue(body, Request.class);
+		double ris = currencyOperations.currencyRate(live, request.getCode(), request.getCode2());
+		return request.getCode() + " to " + request.getCode2() + ": " + ris;
 	}
-	
+
 	/**
 	 * Metodo che gestisce la richiesta delle perdite dovute al cambio
 	 *
-	 * @param code   codice della propria valuta
-	 * @param code2  codice della valuta su cui effetuare il calcolo della perdita
-	 * @param denaro è il denaro che viene investito nel cambio di valuta
+	 * @param body contenente i codici delle valute 
+	 * e il denaro da cambiare
 	 * @throws JSONException
 	 * @throws IOException
 	 * @return stringa dove viene riportato il valore della perdita
 	 */
 
-	@RequestMapping(method = { RequestMethod.GET }, value = "/perdita", produces = "aplication/json")
-	public String getPerdita(@RequestParam String code, String code2, double denaro) throws JSONException, IOException {
-		LiveResponse live = ApiRequest.RichiestaLive();
-		double ris = changeCurrency.perdita(live, code, code2, denaro);
+	@RequestMapping(method = { RequestMethod.POST }, value = "/perdita", produces = "aplication/json")
+	public String getPerdita(@RequestBody String body) throws JSONException, IOException {
+		Live live = ApiRequest.RichiestaLive();
+		ObjectMapper obj = new ObjectMapper();
+		Request request = obj.readValue(body, Request.class);
+		double ris = currencyOperations.perdita(live, request.getCode(), request.getCode2(), request.getDenaro());
 		return "perdità: " + ris;
 	}
 
 	/**
 	 * Metodo che gestisce la richiesta delle statistiche sulla valuta
 	 *
-	 * @param code   codice della propria valuta
-	 * @param code2  codice della valuta su cui effetuare le statistiche
-	 * @param denaro è il denaro che viene investito nel cambio di valuta
-	 * @param date   è array contente le date su cui effetuare le statistiche
+	 + @param body contenente i codici delle valute 
+	 * e il denaro da cambiare
+	 * @param start la data di inizio per l'analisi delle statistiche
+	 * @param end la data di fine per l'analisi delle statistiche
 	 * @throws JSONException
 	 * @throws IOException
+	 * @throws ParseException
 	 * @return stringa dove vengono riportate le statistiche
 	 */
 
-	@RequestMapping(method = { RequestMethod.GET }, value = "/stats", produces = "aplication/json")
-	public String getStats(@RequestParam String code, String code2, double denaro, String[] date)
-			throws JSONException, IOException {
+	@RequestMapping(method = { RequestMethod.POST }, value = "/stats", produces = "aplication/json")
+	public String getStats(@RequestParam String start, String end, @RequestBody String body) throws JSONException, IOException, ParseException {
 
-		double[] ris = new double[date.length];
+		ObjectMapper obj = new ObjectMapper();
+		Request request = obj.readValue(body, Request.class);
+
+		String[] date = util.date(start, end);
+		double[] val = new double[date.length];
 		double[] per = new double[date.length];
 
-		// salvataggio dei valori in un array
+		// salvataggio dei valori e delle perdite in un array e
 		if (date != null) {
 			for (int i = 0; i < date.length; i++) {
-				HistoricalResponse his = ApiRequest.RichiestaStorica(date[i]);
-				ris[i] = changeCurrency.currencyRate(his, code, code2);
+				Historical his = ApiRequest.RichiestaStorica(date[i]);
+
+				val[i] = currencyOperations.currencyRate(his, request.getCode(), request.getCode2());
+				per[i] = currencyOperations.perdita(his, request.getCode(), request.getCode2(), request.getDenaro());
 
 			}
 		}
+
 		// calcolo statistiche
-		double variazione = Statistics.variazione(ris);
-		String var_percentuale = Statistics.var_percentuale(ris);
-		double media = Statistics.avg(ris);
-		double varianza = Statistics.varianza(ris);
-
-		// salvataggio dei valori delle perdite
-		if (date != null) {
-			for (int i = 0; i < date.length; i++) {
-				HistoricalResponse his = ApiRequest.RichiestaStorica(date[i]);
-				double tmp = changeCurrency.perdita(his, code, code2, denaro);
-				per[i] = tmp;
-			}
-		}
+		double variazione = Statistics.variazione(val);
+		String var_percentuale = Statistics.var_percentuale(val);
+		double media = Statistics.avg(val);
+		double varianza = Statistics.varianza(val);
 
 		// calcolo statistiche sulle perdite
 		double perditaAssoluta = Statistics.per_ass(per);
@@ -126,8 +155,8 @@ public class controller {
 		str.append("variazione percentuale: " + var_percentuale + "\n");
 		str.append("media: " + media + "\n");
 		str.append("varianza: " + varianza + "\n");
-		str.append("perdite assulute rispetto a " + code2 + ": " + perditaAssoluta + "\n");
-		str.append("perdite media rispetto a " + code2 + ": " + perditaMedia + "\n");
+		str.append("perdite assulute rispetto a " + request.getCode2() + ": " + perditaAssoluta + "\n");
+		str.append("perdite media rispetto a " + request.getCode2() + ": " + perditaMedia + "\n");
 
 		return str.toString();
 	}
@@ -136,18 +165,23 @@ public class controller {
 	 * Metodo che gestisce la richiesta della scelta dello sportello che ha minori
 	 * perdite di denaro
 	 *
-	 * @param code  codice della propria valuta
-	 * @param code2 è array contente i codici delle valute tra cui scegliere
+	 * @param body contenente il codice cella prorpia valuta
+	 * @param coding codici degli sportelli di interesse
 	 * @throws JSONException
 	 * @throws IOException
 	 * @return stringa dove viene riportato lo sportello con meno perdite di denaro
 	 */
 
-	@RequestMapping(method = { RequestMethod.GET }, value = "/sportello", produces = "aplication/json")
-	public String sceltaSportello(@RequestParam String code, String[] coding) throws IOException {
-		LiveResponse live = ApiRequest.RichiestaLive();
-		String str = changeCurrency.cambiaSportello(live, code, coding);
-		return "Sportello con meno perdità: " + str;
+	@RequestMapping(method = { RequestMethod.POST }, value = "/sportello", produces = "aplication/json")
+	public String sceltaSportello(@RequestParam String[] codici, @RequestBody String body)
+			throws JSONException, IOException {
+
+		Live live = ApiRequest.RichiestaLive();
+		ObjectMapper obj = new ObjectMapper();
+		Request request = obj.readValue(body, Request.class);
+
+		String sportelloCode = currencyOperations.sceltaSportello(live, request.getCode(), codici);
+		return "Sportello con meno perdità: " + sportelloCode;
 	}
-	
+
 }
