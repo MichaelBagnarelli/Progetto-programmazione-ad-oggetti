@@ -62,7 +62,7 @@ Restituisce lo sportello con minor perdita durante il cambio. Si accede a questo
 </p>
 <h3>UseCase Diagram
 </h3>
-<p align="center"><img src="https://github.com/MichaelBagnarelli/Progetto-programmazione-ad-oggetti/blob/main/Uml-Turista/Case%20Diagram-%20Turista.png" alt style="max-width:100%;">
+<p align="center"><img src="https://github.com/MichaelBagnarelli/Progetto-programmazione-ad-oggetti/blob/main/Uml-Turista/Case%20Diagram-Turista.png" alt style="max-width:100%;">
 </p>
 <h3>Class Diagram
 </h3>
