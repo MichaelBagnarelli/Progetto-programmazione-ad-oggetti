@@ -23,11 +23,6 @@ public class Historical extends Live {
 	@JsonProperty("date")
 	private Date date;
 
-	
-	/**
-	 * costruttore della classe
-	 */
-
 
 	/**
 	 * metodo che restituisce la data
