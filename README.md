@@ -66,7 +66,7 @@ Restituisce lo sportello con minor perdita durante il cambio. Si accede a questo
 </p>
 <h3>Class Diagram
 </h3>
-<p align="center"><img src="https://github.com/MichaelBagnarelli/Progetto-programmazione-ad-oggetti/blob/main/Uml-Turista/Class%20Diagram-%20Turista.png" alt style="max-width:100%;">
+<p align="center"><img src="https://github.com/MichaelBagnarelli/Progetto-programmazione-ad-oggetti/blob/main/Uml-Turista/Class%20Diagramm-Turista.png" alt style="max-width:100%;">
 </p>
 <h3>Sequence Diagram - Scelta Sportello
 </h3>
