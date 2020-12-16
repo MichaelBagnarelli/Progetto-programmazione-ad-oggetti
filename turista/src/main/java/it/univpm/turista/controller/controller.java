@@ -1,7 +1,9 @@
 package it.univpm.turista.controller;
 
 import java.io.IOException;
+
 import java.text.ParseException;
+
 import java.util.Set;
 
 import org.json.JSONException;
@@ -16,6 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 
 import it.univpm.turista.model.Request;
+import it.univpm.turista.error.dataError;
 import it.univpm.turista.model.Historical;
 import it.univpm.turista.model.Live;
 import it.univpm.turista.utilities.*;
@@ -28,7 +31,7 @@ import it.univpm.turista.utilities.*;
 public class controller {
 
 	final String http = "http://api.currencylayer.com/";
-	final String access_Key = "?access_key=1b2b4690da1e104760f6e64731ea17a5";
+	final String access_Key = "?access_key=be1e0f992914201a08b44bc0077367c5";
 	final String url = http + "live" + access_Key;
 	
 	/**
@@ -114,15 +117,16 @@ public class controller {
 	 * @throws JSONException
 	 * @throws IOException
 	 * @throws ParseException
+	 * @trows dataError 
 	 * @return stringa dove vengono riportate le statistiche
 	 */
 
 	@RequestMapping(method = { RequestMethod.POST }, value = "/stats", produces = "aplication/json")
-	public String getStats(@RequestParam String start, String end, @RequestBody String body) throws JSONException, IOException, ParseException {
-
+	public String getStats(@RequestParam String start, String end, @RequestBody String body) throws JSONException, IOException, ParseException, dataError {
 		ObjectMapper obj = new ObjectMapper();
 		Request request = obj.readValue(body, Request.class);
-
+		StringBuilder str = new StringBuilder();
+		try {
 		String[] date = util.date(start, end);
 		double[] val = new double[date.length];
 		double[] per = new double[date.length];
@@ -137,6 +141,7 @@ public class controller {
 
 			}
 		}
+	
 
 		// calcolo statistiche
 		double variazione = Statistics.variazione(val);
@@ -149,7 +154,7 @@ public class controller {
 		double perditaMedia = Statistics.per_avg(per);
 
 		// creazione della stringa
-		StringBuilder str = new StringBuilder();
+		
 		str.append("Statistiche sulla valuta: \n");
 		str.append("variazione: " + variazione + "\n");
 		str.append("variazione percentuale: " + var_percentuale + "\n");
@@ -158,8 +163,10 @@ public class controller {
 		str.append("perdite assulute rispetto a " + request.getCode2() + ": " + perditaAssoluta + "\n");
 		str.append("perdite media rispetto a " + request.getCode2() + ": " + perditaMedia + "\n");
 
-		return str.toString();
-	}
+		} catch (dataError err) {
+			err.printStackTrace();
+		} return str.toString();
+}	
 
 	/**
 	 * Metodo che gestisce la richiesta della scelta dello sportello che ha minori
