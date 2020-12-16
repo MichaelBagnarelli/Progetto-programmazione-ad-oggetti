@@ -30,9 +30,11 @@ Inoltre nel progetto è presente anche la classe Request che mappa la richiesta 
 
 Restituisce tutti i dati acquisiti dall'Api in firmato Json. Si accede a questo path mediante la richiesta GET. 
 
+
 **/metadata**
 
 Restituisce tutti i metadati e i relativi tipi acquisiti dall'Api in firmato Json. Si accede a questo path mediante una richiesta GET. 
+
 
 **/tasso**
 
@@ -45,6 +47,7 @@ Esempio del body:
     "code2" : "USD"
     
 }
+
 
 **/perdita**
 
@@ -59,9 +62,11 @@ Esempio del body per il calcolo delle perdite:
     
 }
 
+
 **/stats**
 
 Restituisce tutti i le statistiche di una valuta. Si accede a questo path mediante una richiesta POST. Per questa richiesta sono richieste come parametro le date di inizio e di fine per il calcolo delle statistiche mentre nel body sono contenuti i codici delle valute e il denaro.
+
 
 **/sportello**
 
