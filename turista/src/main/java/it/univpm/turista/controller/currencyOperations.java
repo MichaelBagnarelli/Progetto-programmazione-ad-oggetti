@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import it.univpm.turista.error.codeError;
 import it.univpm.turista.model.Historical;
 import it.univpm.turista.model.Live;
 
@@ -27,19 +28,22 @@ public class currencyOperations {
 	 * @param code  codice della propria valuta
 	 * @param code2 codice della valuta su cui effetuare il cambio
 	 * @throws NullPointerException
+	 * @throws codeError 
 	 * @return finalRate il valore del tasso
 	 */
 
-	public static double currencyRate(Live live, String code, String code2) throws NullPointerException {
-
+	public static double currencyRate(Live live, String code, String code2) throws NullPointerException, codeError {
 		double finalrate;
 		double rateCode;
 		double rateCode2;
-
-		rateCode = live.getQuotes().get(defaultcurrency + code);
-		rateCode2 = live.getQuotes().get(defaultcurrency + code2);
-		finalrate = rateCode2 / rateCode;
-
+		
+		if(live.getQuotes().keySet().contains(defaultcurrency + code) && live.getQuotes().keySet().contains(defaultcurrency + code2)) {
+			rateCode = live.getQuotes().get(defaultcurrency + code);
+			rateCode2 = live.getQuotes().get(defaultcurrency + code2);
+			finalrate = rateCode2 / rateCode;
+		} else {
+			throw (new codeError("I codici inseriti non sono corretti"));
+		}
 		return finalrate;
 	}
 
@@ -51,13 +55,13 @@ public class currencyOperations {
 	 * @param code  codice della propria valuta
 	 * @param code2 codice della valuta su cui effetuare il calcolo della perdita
 	 * @throws NullPointerException
-	 * @return risultato il valore della perdiata dovuta al cambio
+	 * @throws codeError  
+	 * @return risultato il valore della perdiata dovuta al cambio 
 	 */
 
-	public static double perdita(Live live, String code, String code2, Double denaro) throws NullPointerException {
+	public static double perdita(Live live, String code, String code2, Double denaro) throws NullPointerException, codeError {
 
 		double risultato = 0;
-
 		double rate = currencyRate(live, code, code2);
 		risultato = rate * denaro - denaro;
 
@@ -72,18 +76,23 @@ public class currencyOperations {
 	 * @param code  codice della propria valuta
 	 * @param code2 codice della valuta su cui effetuare il cambio
 	 * @throws NullPointerException
+	 * @throws codeError 
 	 * @return finalRate il valore del tasso
 	 */
 
-	public static double currencyRate(Historical his, String code, String code2) throws NullPointerException {
+	public static double currencyRate(Historical his, String code, String code2) throws NullPointerException, codeError {
 
 		double rateCode;
 		double ratecode2;
-
+		double finalrate;
+		if(his.getQuotes().keySet().contains(defaultcurrency + code) & his.getQuotes().keySet().contains(defaultcurrency + code2)) {
 		rateCode = his.getQuotes().get(defaultcurrency + code);
 		ratecode2 = his.getQuotes().get(defaultcurrency + code2);
-		double finalrate = ratecode2 / rateCode;
-		return finalrate;
+		finalrate = ratecode2 / rateCode;
+		} else {
+			throw (new codeError("I codici inseriti non sono corretti"));
+		}
+		return finalrate;	
 	}
 
 	/**
@@ -94,13 +103,13 @@ public class currencyOperations {
 	 * @param code  codice della propria valuta
 	 * @param code2 codice della valuta su cui effetuare il calcolo della perdita
 	 * @throws NullPointerException
-	 * @return risultato il valore della perdiata dovuta al cambio
+	 * @throws codeError
+	 * @return risultato il valore della perdiata dovuta al cambio  
 	 */
 
-	public static double perdita(Historical his, String code, String code2, Double denaro) throws NullPointerException {
+	public static double perdita(Historical his, String code, String code2, Double denaro) throws NullPointerException, codeError {
 
 		double risultato = 0;
-
 		double rate = currencyRate(his, code, code2);
 		risultato = rate * denaro - denaro;
 
@@ -114,10 +123,11 @@ public class currencyOperations {
 	 * @param code   codice della propria valuta
 	 * @param codici stringa di codici delle valute su cui applicare la scelta
 	 * @throws NullPointerException
+	 * @throws codeError
 	 * @return ris codice dello sportello che farà perdere meno denaro
 	 */
 
-	public static String sceltaSportello(Live live, String code, String[] codici) throws NullPointerException {
+	public static String sceltaSportello(Live live, String code, String[] codici) throws NullPointerException, codeError {
 
 		double[] finalrate = new double[codici.length];
 		String[] finalcode = new String[codici.length];
