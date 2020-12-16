@@ -62,8 +62,8 @@ public class util {
 	 */
 
 	public static String[] date(String start, String end) throws ParseException, dataError {
-		String[] date = null;
 		
+		String[] date = null;
 		
 		// calcolo differenza giorni tra le date
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -78,20 +78,19 @@ public class util {
 		int giorni = (int) (diff / (24 * 60 * 60 * 1000));
 		
 		// creazione array di date
-		String convertedDate = "";
+		String nextData = "";
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(dateFormat.parse(start));
 		date = new String[giorni];
 
 		for (int i = 0; i < giorni; i++) {
 			cal.add(Calendar.DATE, 1);
-			convertedDate = dateFormat.format(cal.getTime());
-			date[i] = convertedDate;
-			cal.setTime(dateFormat.parse(convertedDate));
+			nextData = dateFormat.format(cal.getTime());
+			date[i] = nextData;
+			cal.setTime(dateFormat.parse(nextData));
 
 		}
 		
 		return date;
 	}
 }
-
