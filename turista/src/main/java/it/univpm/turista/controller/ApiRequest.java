@@ -38,14 +38,18 @@ public class ApiRequest {
 
 	public static JSONObject readJsonFromUrl(String url) throws IOException, JSONException {
 		InputStream is = new URL(url).openStream();
+		JSONObject json = null;
 		try {
 			BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
 			String jsonText = readAll(rd);
-			JSONObject json = new JSONObject(jsonText);
-			return json;
+			json = new JSONObject(jsonText);
+			is.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		} finally {
 			is.close();
 		}
+		return json;
 	}
 
 	/**
