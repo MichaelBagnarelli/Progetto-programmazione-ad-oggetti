@@ -27,12 +27,15 @@ Inoltre nel progetto è presente anche la classe Request che mappa la richiesta 
 ## <div align="center">RICHIESTE CONTROLLER</div>
 
 **/data**
+
 Restituisce tutti i dati acquisiti dall'Api in firmato Json. Si accede a questo path mediante la richiesta GET. 
 
 **/metadata**
+
 Restituisce tutti i metadati e i relativi tipi acquisiti dall'Api in firmato Json. Si accede a questo path mediante una richiesta GET. 
 
 **/tasso**
+
 Restituisce il tasso di cambio tra due valute scelte dal turista. Si accede a questo path mediante una richiesta POST. Il body richiesto deve contenere i codici delle valute che interessano all'utente per il calcolo del tasso
 Esempio del body:
 
@@ -44,6 +47,7 @@ Esempio del body:
 }
 
 **/perdita**
+
 Restituisce la perdita durante il cambio tra due valute scelte dal turista. Si accede a questo path mediante una richiesta POST. In questo caso il body contiene oltre ai codici delle valute anche il denaro che si vuole impiegare nel cambio.
 Esempio del body per il calcolo delle perdite:
 
@@ -56,9 +60,11 @@ Esempio del body per il calcolo delle perdite:
 }
 
 **/stats**
+
 Restituisce tutti i le statistiche di una valuta. Si accede a questo path mediante una richiesta POST. Per questa richiesta sono richieste come parametro le date di inizio e di fine per il calcolo delle statistiche mentre nel body sono contenuti i codici delle valute e il denaro.
 
 **/sportello**
+
 Restituisce lo sportello con minor perdita durante il cambio. Si accede a questo path mediante POST. In questo path è richiesto l'immessione dei codici degli sportelli (valute) per i quali deve essere calcolata la perdita.
 
 
