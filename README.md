@@ -37,18 +37,22 @@ Restituisce il tasso di cambio tra due valute scelte dal turista. Si accede a qu
 Esempio del body:
 
 {
+
     "code" : "EUR", 
     "code2" : "USD"
+    
 }
 
 **/perdita**
 Restituisce la perdita durante il cambio tra due valute scelte dal turista. Si accede a questo path mediante una richiesta POST. In questo caso il body contiene oltre ai codici delle valute anche il denaro che si vuole impiegare nel cambio.
 Esempio del body per il calcolo delle perdite:
 
-{   
+{
+
     "code" : "EUR", 
     "code2" : "USD",
     "denaro" : 10 
+    
 }
 
 **/stats**
