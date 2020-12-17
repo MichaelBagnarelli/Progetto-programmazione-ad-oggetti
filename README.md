@@ -83,11 +83,22 @@ Restituisce lo sportello con minor perdita durante il cambio. Si accede a questo
 </h3>
 <p align="center"><img src="https://github.com/MichaelBagnarelli/Progetto-programmazione-ad-oggetti/blob/main/Uml-Turista/Class%20Diagramm-Turista.png" alt style="max-width:100%;">
 </p>
-<h3>Sequence Diagram - Scelta Sportello
+>
+<h3>Sequence Diagram - Richiesta Tasso
 </h3>
-<p align="center"><img src="https://github.com/MichaelBagnarelli/Progetto-programmazione-ad-oggetti/blob/main/Uml-Turista/Sequence%20Diagram-%20Scelta%20Sportello.png" alt style="max-width:100%;">
+<p align="center"><img src="https://github.com/MichaelBagnarelli/Progetto-programmazione-ad-oggetti/blob/main/Uml-Turista/Sequence%20Diagram-richiesta%20tasso.png" alt style="max-width:100%;">
+</p>
+<h3>Sequence Diagram - Richiesta perdita
+</h3>
+<p align="center"><img src="https://github.com/MichaelBagnarelli/Progetto-programmazione-ad-oggetti/blob/main/Uml-Turista/Sequence%20diagram%20-%20Richiesta%20Perdita.png" alt style="max-width:100%;">
+</p>
 </p>
 <h3>Sequence Diagram - Statistiche
 </h3>
 <p align="center"><img src="https://github.com/MichaelBagnarelli/Progetto-programmazione-ad-oggetti/blob/main/Uml-Turista/Sequence%20Diagram-%20Statistiche.png" alt style="max-width:100%;">
+</p>
+</p>
+<h3>Sequence Diagram - Scelta Sportello
+</h3>
+<p align="center"><img src="https://github.com/MichaelBagnarelli/Progetto-programmazione-ad-oggetti/blob/main/Uml-Turista/Sequence%20Diagram-%20Scelta%20Sportello.png" alt style="max-width:100%;">
 </p>
