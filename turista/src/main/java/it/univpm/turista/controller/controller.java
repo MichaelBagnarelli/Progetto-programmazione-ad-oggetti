@@ -18,8 +18,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 
 import it.univpm.turista.model.Request;
-import it.univpm.turista.error.codeError;
-import it.univpm.turista.error.dataError;
+import it.univpm.turista.exception.codeException;
+import it.univpm.turista.exception.dataException;
 import it.univpm.turista.model.Historical;
 import it.univpm.turista.model.Live;
 import it.univpm.turista.utilities.*;
@@ -44,7 +44,6 @@ public class controller {
 	 */
 	@RequestMapping(method = { RequestMethod.GET }, value = "/data", produces = "application/json")
 	public Live getData() throws JSONException, IOException {
-		
 		JSONObject json = ApiRequest.readJsonFromUrl(url);
 		JsonMapper mapper = new JsonMapper();
 		return mapper.readValue(json.toString(), Live.class);
@@ -74,21 +73,21 @@ public class controller {
 	 * Metodo che gestisce la richiesta del tasso di cambio
 	 *
 	 * @param body  contenente i codici delle valute 
-	 * 		per le quali è richiesto il tasso
+	 * 		  per le quali è richiesto il tasso
 	 * @throws JSONException
 	 * @throws IOException
-	 * @throws codeError 
+	 * @throws codeException 
 	 * @throws NullPointerException 
 	 * @return stringa dove viene riportato il tasso di cambio
 	 */
 
 	@RequestMapping(method = { RequestMethod.POST }, value = "/tasso", produces = "aplication/json")
-	public String getTasso(@RequestBody String body) throws JSONException, IOException, NullPointerException, codeError {
+	public String getTasso(@RequestBody String body) throws JSONException, IOException, NullPointerException, codeException {
 		Live live = ApiRequest.RichiestaLive();
 		ObjectMapper obj = new ObjectMapper();
 		Request request = obj.readValue(body, Request.class);
-		double ris = currencyOperations.currencyRate(live, request.getCode(), request.getCode2());
-		return request.getCode() + " to " + request.getCode2() + ": " + ris;
+		double tasso = currencyOperations.currencyRate(live, request.getCode(), request.getCode2());
+		return request.getCode() + " to " + request.getCode2() + ": " + tasso;
 	}
 
 	/**
@@ -98,41 +97,42 @@ public class controller {
 	 * e il denaro da cambiare
 	 * @throws JSONException
 	 * @throws IOException
-	 * @throws codeError 
+	 * @throws codeException 
 	 * @throws NullPointerException 
 	 * @return stringa dove viene riportato il valore della perdita
 	 */
 
 	@RequestMapping(method = { RequestMethod.POST }, value = "/perdita", produces = "aplication/json")
-	public String getPerdita(@RequestBody String body) throws JSONException, IOException, NullPointerException, codeError {
+	public String getPerdita(@RequestBody String body) throws JSONException, IOException, NullPointerException, codeException {
 		Live live = ApiRequest.RichiestaLive();
 		ObjectMapper obj = new ObjectMapper();
 		Request request = obj.readValue(body, Request.class);
-		double ris = currencyOperations.perdita(live, request.getCode(), request.getCode2(), request.getDenaro());
-		return "perdità: " + ris;
+		double perdita = currencyOperations.perdita(live, request.getCode(), request.getCode2(), request.getDenaro());
+		return "perdità: " + perdita;
 	}
 
 	/**
 	 * Metodo che gestisce la richiesta delle statistiche sulla valuta
 	 *
-	 + @param body contenente i codici delle valute 
+	 * @param body contenente i codici delle valute 
 	 * e il denaro da cambiare
 	 * @param start la data di inizio per l'analisi delle statistiche
 	 * @param end la data di fine per l'analisi delle statistiche
-	 * @throws JSONException
+	 * @throws JSONException errore sul file json
 	 * @throws IOException
 	 * @throws ParseException
-	 * @trows dataError 
-	 * @throws codeError 
+	 * @throws dataException 
+	 * @throws codeException 
 	 * @throws NullPointerException 
 	 * @return stringa dove vengono riportate le statistiche
 	 */
 
 	@RequestMapping(method = { RequestMethod.POST }, value = "/stats", produces = "aplication/json")
-	public String getStats(@RequestParam String start, String end, @RequestBody String body) throws JSONException, IOException, ParseException, dataError, NullPointerException, codeError {
+	public String getStats(@RequestParam String start, String end, @RequestBody String body) throws JSONException, IOException, ParseException, dataException, NullPointerException, codeException {
 		ObjectMapper obj = new ObjectMapper();
 		Request request = obj.readValue(body, Request.class);
-		StringBuilder str = new StringBuilder();
+		StringBuilder stats = new StringBuilder();
+		
 		try {
 		String[] date = util.date(start, end);
 		double[] val = new double[date.length];
@@ -162,17 +162,17 @@ public class controller {
 
 		// creazione della stringa
 		
-		str.append("Statistiche sulla valuta: \n");
-		str.append("variazione: " + variazione + "\n");
-		str.append("variazione percentuale: " + var_percentuale + "\n");
-		str.append("media: " + media + "\n");
-		str.append("varianza: " + varianza + "\n");
-		str.append("perdite assulute rispetto a " + request.getCode2() + ": " + perditaAssoluta + "\n");
-		str.append("perdite media rispetto a " + request.getCode2() + ": " + perditaMedia + "\n");
+		stats.append("Statistiche sulla valuta: \n");
+		stats.append("variazione: " + variazione + "\n");
+		stats.append("variazione percentuale: " + var_percentuale + "\n");
+		stats.append("media: " + media + "\n");
+		stats.append("varianza: " + varianza + "\n");
+		stats.append("perdite assulute rispetto a " + request.getCode2() + ": " + perditaAssoluta + "\n");
+		stats.append("perdite media rispetto a " + request.getCode2() + ": " + perditaMedia + "\n");
 
-		} catch (dataError err) {
+		} catch (dataException err) {
 			err.printStackTrace();
-		} return str.toString();
+		} return stats.toString();
 }	
 
 	/**
@@ -180,17 +180,17 @@ public class controller {
 	 * perdite di denaro
 	 *
 	 * @param body contenente il codice cella prorpia valuta
-	 * @param coding codici degli sportelli di interesse
+	 * @param codici codici degli sportelli di interesse
 	 * @throws JSONException
 	 * @throws IOException
-	 * @throws codeError 
+	 * @throws codeException 
 	 * @throws NullPointerException 
 	 * @return stringa dove viene riportato lo sportello con meno perdite di denaro
 	 */
 
 	@RequestMapping(method = { RequestMethod.POST }, value = "/sportello", produces = "aplication/json")
 	public String sceltaSportello(@RequestParam String[] codici, @RequestBody String body)
-			throws JSONException, IOException, NullPointerException, codeError {
+			throws JSONException, IOException, NullPointerException, codeException {
 
 		Live live = ApiRequest.RichiestaLive();
 		ObjectMapper obj = new ObjectMapper();

@@ -5,7 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import it.univpm.turista.error.dataError;
+import it.univpm.turista.exception.dataException;
 
 
 
@@ -58,10 +58,10 @@ public class util {
 	 * @param end   la data finale
 	 * @throws ParseException
 	 * @return array contenente l'intevallo di date
-	 * @throws dataError 
+	 * @throws dataException 
 	 */
 
-	public static String[] date(String start, String end) throws ParseException, dataError {
+	public static String[] date(String start, String end) throws ParseException, dataException {
 		
 		String[] date = null;
 		
@@ -70,11 +70,7 @@ public class util {
 		Date dayfrom = dateFormat.parse(start);
 		Date dayto = dateFormat.parse(end);
 		
-		if(dayfrom.after(dayto)) {
-			throw (new dataError("La data di fine analisi non è corretta"));
-		}
-		
-		long diff = dayto.getTime() - dayfrom.getTime(); 
+		if(dayfrom.before(dayto)) { long diff = dayto.getTime() - dayfrom.getTime(); 
 		int giorni = (int) (diff / (24 * 60 * 60 * 1000));
 		
 		// creazione array di date
@@ -88,9 +84,13 @@ public class util {
 			nextData = dateFormat.format(cal.getTime());
 			date[i] = nextData;
 			cal.setTime(dateFormat.parse(nextData));
-
 		}
-		
+			
+		} else {
+			throw (new dataException("La data di fine analisi non è corretta"));
+		}
+
 		return date;
 	}
 }
+

@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import it.univpm.turista.error.codeError;
+import it.univpm.turista.exception.codeException;
 import it.univpm.turista.model.Historical;
 import it.univpm.turista.model.Live;
 
@@ -28,11 +28,11 @@ public class currencyOperations {
 	 * @param code  codice della propria valuta
 	 * @param code2 codice della valuta su cui effetuare il cambio
 	 * @throws NullPointerException
-	 * @throws codeError 
+	 * @throws codeException 
 	 * @return finalRate il valore del tasso
 	 */
 
-	public static double currencyRate(Live live, String code, String code2) throws NullPointerException, codeError {
+	public static double currencyRate(Live live, String code, String code2) throws NullPointerException, codeException {
 		double finalrate;
 		double rateCode;
 		double rateCode2;
@@ -42,7 +42,7 @@ public class currencyOperations {
 			rateCode2 = live.getQuotes().get(defaultcurrency + code2);
 			finalrate = rateCode2 / rateCode;
 		} else {
-			throw (new codeError("I codici inseriti non sono corretti"));
+			throw (new codeException("I codici inseriti non sono corretti"));
 		}
 		return finalrate;
 	}
@@ -55,11 +55,11 @@ public class currencyOperations {
 	 * @param code  codice della propria valuta
 	 * @param code2 codice della valuta su cui effetuare il calcolo della perdita
 	 * @throws NullPointerException
-	 * @throws codeError  
+	 * @throws codeException  
 	 * @return risultato il valore della perdiata dovuta al cambio 
 	 */
 
-	public static double perdita(Live live, String code, String code2, Double denaro) throws NullPointerException, codeError {
+	public static double perdita(Live live, String code, String code2, Double denaro) throws NullPointerException, codeException {
 
 		double risultato = 0;
 		double rate = currencyRate(live, code, code2);
@@ -76,11 +76,11 @@ public class currencyOperations {
 	 * @param code  codice della propria valuta
 	 * @param code2 codice della valuta su cui effetuare il cambio
 	 * @throws NullPointerException
-	 * @throws codeError 
+	 * @throws codeException 
 	 * @return finalRate il valore del tasso
 	 */
 
-	public static double currencyRate(Historical his, String code, String code2) throws NullPointerException, codeError {
+	public static double currencyRate(Historical his, String code, String code2) throws NullPointerException, codeException {
 
 		double rateCode;
 		double ratecode2;
@@ -90,7 +90,7 @@ public class currencyOperations {
 		ratecode2 = his.getQuotes().get(defaultcurrency + code2);
 		finalrate = ratecode2 / rateCode;
 		} else {
-			throw (new codeError("I codici inseriti non sono corretti"));
+			throw (new codeException("I codici inseriti non sono corretti"));
 		}
 		return finalrate;	
 	}
@@ -103,11 +103,11 @@ public class currencyOperations {
 	 * @param code  codice della propria valuta
 	 * @param code2 codice della valuta su cui effetuare il calcolo della perdita
 	 * @throws NullPointerException
-	 * @throws codeError
+	 * @throws codeException
 	 * @return risultato il valore della perdiata dovuta al cambio  
 	 */
 
-	public static double perdita(Historical his, String code, String code2, Double denaro) throws NullPointerException, codeError {
+	public static double perdita(Historical his, String code, String code2, Double denaro) throws NullPointerException, codeException {
 
 		double risultato = 0;
 		double rate = currencyRate(his, code, code2);
@@ -123,11 +123,11 @@ public class currencyOperations {
 	 * @param code   codice della propria valuta
 	 * @param codici stringa di codici delle valute su cui applicare la scelta
 	 * @throws NullPointerException
-	 * @throws codeError
+	 * @throws codeException
 	 * @return ris codice dello sportello che farà perdere meno denaro
 	 */
 
-	public static String sceltaSportello(Live live, String code, String[] codici) throws NullPointerException, codeError {
+	public static String sceltaSportello(Live live, String code, String[] codici) throws NullPointerException, codeException {
 
 		double[] finalrate = new double[codici.length];
 		String[] finalcode = new String[codici.length];
