@@ -17,7 +17,7 @@ Invece i dati storici vengono modellati dalla classe HistoricalResponse che cont
 ## <div align="center">STRUTTURA PROGETTO</div>
 Il progetto si compone della classe currencyOperations che contiene i metodi utili per l'elaborazione dei dati:
 * currencyrate restituisce il tasso di cambio di qualsiasi valuta rispetto ad un'altra. Il metodo si basa sulla regola per la quale un tasso di cambio tra due valute può essere ottenuto da i tassi di cambio delle due valute rispetto ad altra valuta (USD in questo caso) e facendo la divisone tra le due.
-* perdite calcola e restituisce quanto denaro viene perso (o guadagnato) durante il cambio di valuta.
+* perdite calcola e restituisce quanto denaro viene perso (o guadagnato) durante il cambio di valuta. Il metodo restituisce la differenza con segno tra il denaro che si ha prima del dopo il cambio e quello che si ha prima.
 * sceltaSportello restituisce lo sportello (valuta) per il quale avvengono minori perdite durante il cambio tra quelli immessi dal turista.
 
 La classe Statistic è la classe che contiene i metodi per calcolare le statistiche su una serie di valori ottenuti per una singola valuta. Le statistiche analizate sono: la variazione della valuta, variazione percentuale, media, varianza, perdite assolute rispetto ad un'altra valuta e perdite medie.
