@@ -32,7 +32,7 @@ import it.univpm.turista.utilities.*;
 public class controller {
 
 	final String http = "http://api.currencylayer.com/";
-	final String access_Key = "?access_key=be1e0f992914201a08b44bc0077367c5";
+	final String access_Key = "?access_key=7675e4521f1a2bb713b0638fa9fa36bd";
 	final String url = http + "live" + access_Key;
 	
 	/**
